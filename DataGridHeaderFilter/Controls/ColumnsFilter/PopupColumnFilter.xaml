@@ -1,0 +1,129 @@
+﻿<Popup x:Class="Tongyu.Smart.Client.Controls.PopupColumnFilter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+              x:Name="PoupuWin"
+             MinWidth="300" MinHeight="300">
+    <Border x:Name="_popupBorder" BorderBrush="LightGray" BorderThickness="1">
+
+        <Grid>
+            <Grid.RowDefinitions>               
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Margin="10" x:Name="_popupContentGrid"  MinWidth="290" MinHeight="290" Width="Auto" Height="Auto">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBox x:Name="searchTextBox"
+                         DataContext="{Binding RelativeSource={RelativeSource AncestorType=Popup,Mode=FindAncestor}}"
+                             Controls:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCmd, Mode=OneWay}"
+                             Controls:TextBoxHelper.ButtonCommandParameter="{Binding ElementName=searchTextBox, Path=Text}"                          
+                             Controls:TextBoxHelper.Watermark="输入合约号查询"
+                             Style="{DynamicResource MahApps.Styles.TextBox.Search}"
+                     >
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Return"
+                                        Command="{Binding TextBoxButtonCmd, Mode=OneWay}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}, Path=Text, Mode=OneWay}" />
+                    </TextBox.InputBindings>
+                </TextBox>
+
+                <ScrollViewer Grid.Row="1" Margin="0,5,0,0" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled">
+                    <Border BorderBrush="#ababab" BorderThickness="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <ListViewItem x:Name="_contentAllView" PreviewMouseDown="_contentAllView_PreviewMouseDown" Style="{StaticResource MahApps.Styles.ListViewItem}">                              
+                                <ListViewItem.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox x:Name="_AllCheckBox" Content="All" Click="_AllCheckBox_Click"/>
+                                        <TextBlock Text="(" VerticalAlignment="Center" Foreground="LightGray"/>
+                                        <TextBlock x:Name="_AllCountText" Text="{Binding}" VerticalAlignment="Center" Foreground="LightGray"/>
+                                        <TextBlock Text=")" VerticalAlignment="Center" Foreground="LightGray"/>
+                                    </StackPanel>
+                                </ListViewItem.Content>
+                            </ListViewItem>
+                            <ListView Grid.Row="1"
+			                    x:Name="checkedListView"
+			                    SelectionMode="Multiple"            
+			                    ItemsSource="{Binding}"
+			                    CheckBox.Unchecked="OnCheckItem" 
+                                CheckBox.Checked="OnCheckItem"    
+                                Style="{StaticResource MahApps.Styles.ListView}"
+                                 >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
+                                        <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate >
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox
+			                x:Name="checkbox"
+			                Content="{Binding Title}"
+			                IsChecked="{Binding	RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}"/>
+                                            <TextBlock Text="(" VerticalAlignment="Center" Foreground="LightGray"/>
+                                            <TextBlock Text="{Binding Count}" VerticalAlignment="Center" Foreground="LightGray"/>
+                                            <TextBlock Text=")" VerticalAlignment="Center" Foreground="LightGray"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </Border>
+                </ScrollViewer>
+            </Grid>
+            <Grid Grid.Row="1" Background="LightGray"/>
+            <Grid  x:Name="_popupGridBtn" Grid.Row="2">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="清 除" FontSize="12" Padding="20,3" Margin="10,5,0,5" HorizontalAlignment="Left" Click="ResetBtn_Click"/>               
+                </StackPanel>
+                <Thumb HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,1,1" 
+        DragDelta="OnResizeThumbDragDelta" 
+        DragStarted="OnResizeThumbDragStarted" 
+        DragCompleted="OnResizeThumbDragCompleted">
+                    <Thumb.Style>
+                        <Style TargetType="{x:Type Thumb}" BasedOn="{x:Null}">
+                            <Style.Setters>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Grid x:Name="resizeVisual" DockPanel.Dock="Right" VerticalAlignment="Bottom" >
+                                                <Line X1="6" Y1="18" X2="18" Y2="6" Stroke="DarkGray" StrokeThickness="1.5"/>
+                                                <!--smallest/right|bottom most -->
+                                                <Line X1="10" Y1="18" X2="18" Y2="10" Stroke="DarkGray" StrokeThickness="1.5"/>
+                                                <Line X1="14" Y1="18" X2="18" Y2="14" Stroke="DarkGray" StrokeThickness="1.5"/>
+                                                <!--longers/left|top most-->
+                                                <Grid.Style>
+                                                    <Style TargetType="{x:Type Grid}">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Cursor" Value="SizeNWSE"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Grid.Style>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style.Setters>
+                        </Style>
+                    </Thumb.Style>
+                </Thumb>
+            </Grid>
+        </Grid>
+
+    </Border>
+</Popup>

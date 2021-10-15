@@ -1,0 +1,54 @@
+﻿<Window x:Class="DataGridHeaderFilter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Tongyu.Smart.Client.Controls"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="650" Width="1000">
+    <Grid>
+        <DataGrid x:Name="_dataGrid"
+                                    IsReadOnly="True"
+                                    ItemsSource="{Binding}"                                   
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="False"
+                                    HeadersVisibility="All"
+                                    GridLinesVisibility="Horizontal"          
+                                    FrozenColumnCount="1"      
+                                    CanUserReorderColumns="False"
+                                    RowHeight="20"
+                                    SelectionUnit="FullRow"
+                                    SelectionMode="Single"
+                                    local:DataGridFilter.CurrentDataGridItemSource="{Binding}"                                             
+                                     >
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="框架合约编号" Binding="{Binding Flag,Mode=OneWay}" Width="80"/>
+                <DataGridTextColumn Header="订单编号" Binding="{Binding Index}" Width="45"/>
+                <DataGridTextColumn Binding="{Binding ClientId}" SortMemberPath="ClientId">
+                    <DataGridTextColumn.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="客户ID" Margin="0,0,5,0"/>
+                            <local:DataGridFilterColumnControl/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding FundAccount}" SortMemberPath="FundAccount">
+                    <DataGridTextColumn.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="资金账号" Margin="0,0,5,0"/>
+                            <local:DataGridFilterColumnControl/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding TradeSymbol}" SortMemberPath="TradeSymbol">
+                    <DataGridTextColumn.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="标的" Margin="0,0,5,0"/>
+                            <local:DataGridFilterColumnControl/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
